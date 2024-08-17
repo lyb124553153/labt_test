@@ -1,38 +1,32 @@
-name: Manage Mutual Labels
+name: Manage Mutually Exclusive Labels
 
 on:
-  label:
-    types: [created]
+  issues:
+    types: [labeled]
 
 jobs:
-  remove_other_labels:
+  manage_labels:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Remove other mutual labels
+      - name: Remove Mutually Exclusive Labels
         uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            echo 'start remove other labels'
-            const issue_number = context.issue.number;
-            echo issue_number
-            const newLabel = context.payload.label.name; // 获取新添加的标签
-            const mutualLabels = ['step1', 'step2', 'step3', 'step4']; // 定义互斥标签
-
-            // 获取当前问题的标签
-            const { data: issue } = await github.issues.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issue_number,
-            });
-
-            // 移除互斥标签
-            for (const label of mutualLabels) {
-              if (label !== newLabel && issue.labels.some(l => l.name === label)) {
-                await github.issues.removeLabel({
+            const labels = ['step1', 'step2', 'step3']; // 互斥标签列表
+            const labelToAdd = context.payload.label.name; // 获取添加的标签
+            const issueNumber = context.issue.number; // 获取issue编号
+            
+            // 遍历互斥标签
+            for (const label of labels) {
+              if (label !== labelToAdd) {
+                // 移除其他标签
+                await github.rest.issues.removeLabel({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  issue_number: issue_number,
-                  name: label,
-                });
+                  issue_number: issueNumber,
+                  name: label
+                }).catch(err => console.log(`Could not remove label ${label}: ${err}`));
               }
             }
