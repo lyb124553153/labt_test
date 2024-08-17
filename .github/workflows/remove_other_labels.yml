@@ -15,7 +15,7 @@ jobs:
             const { context, github } = require('@actions/github');
             const issue_number = context.issue.number;
             const newLabel = context.payload.label.name; // 获取新添加的标签
-            const mutualLabels = ['step1', 'step2', 'step3']; // 定义互斥标签
+            const mutualLabels = ['step1', 'step2', 'step3', 'step4']; // 定义互斥标签
 
             // 获取当前问题的标签
             const { data: issue } = await github.issues.get({
