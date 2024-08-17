@@ -7,6 +7,8 @@ on:
 jobs:
   manage_labels:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write  # Grant write permission to issues
 
     steps:
       - name: Remove Mutually Exclusive Labels
