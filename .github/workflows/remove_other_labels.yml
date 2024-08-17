@@ -12,7 +12,9 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            echo 'start remove other labels'
             const issue_number = context.issue.number;
+            echo issue_number
             const newLabel = context.payload.label.name; // 获取新添加的标签
             const mutualLabels = ['step1', 'step2', 'step3', 'step4']; // 定义互斥标签
 
