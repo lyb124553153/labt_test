@@ -20,15 +20,17 @@ jobs:
             const labelToAdd = context.payload.label.name; // 获取添加的标签
             const issueNumber = context.issue.number; // 获取issue编号
             
-            // 遍历互斥标签
-            for (const label of labels) {
-              if (label !== labelToAdd) {
-                // 移除其他标签
-                await github.rest.issues.removeLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issueNumber,
-                  name: label
-                }).catch(err => console.log(`Could not remove label ${label}: ${err}`));
+            if lables.includes(lableToAdd) {
+              // 遍历互斥标签
+              for (const label of labels) {
+                if (label !== labelToAdd) {
+                  // 移除其他标签
+                  await github.rest.issues.removeLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issueNumber,
+                    name: label
+                  }).catch(err => console.log(`Could not remove label ${label}: ${err}`));
+                }
               }
             }
