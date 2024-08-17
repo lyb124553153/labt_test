@@ -1,0 +1,36 @@
+name: Remove Other Labels
+
+on:
+  label:
+    types: [created]
+
+jobs:
+  remove_labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove other labels
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { context, github } = require('@actions/github');
+            const issue_number = context.issue.number;
+            const labelsToRemove = ['label1', 'label2']; // 替换为你希望移除的标签
+
+            // 获取当前的标签
+            const { data: issue } = await github.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+            });
+
+            // 移除指定的标签
+            for (const label of labelsToRemove) {
+              if (issue.labels.some(l => l.name === label)) {
+                await github.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue_number,
+                  name: label,
+                });
+              }
+            }
