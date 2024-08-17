@@ -20,7 +20,7 @@ jobs:
             const labelToAdd = context.payload.label.name; // 获取添加的标签
             const issueNumber = context.issue.number; // 获取issue编号
             
-            if lables.includes(lableToAdd) {
+            if labels.includes(lableToAdd) {
               // 遍历互斥标签
               for (const label of labels) {
                 if (label !== labelToAdd) {
